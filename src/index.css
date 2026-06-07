@@ -179,5 +179,4 @@
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(hsl(var(--gold) / 0.4), hsl(var(--gold-deep) / 0.6));
   border-radius: 8px;
-  }
 }
