@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/lvdj/Navbar";
 import { Hero } from "@/components/lvdj/Hero";
+import { RadioPlayer } from "@/components/lvdj/RadioPlayer";
 import { FeatureCards } from "@/components/lvdj/FeatureCards";
 import { Schedule } from "@/components/lvdj/Schedule";
 import { QuickAccess } from "@/components/lvdj/QuickAccess";
@@ -11,6 +12,9 @@ const Index = () => (
     <Navbar />
     <main className="pb-24 lg:pb-0">
       <Hero />
+      <section className="container -mt-8">
+        <RadioPlayer />
+      </section>
       <FeatureCards />
       <Schedule />
       <QuickAccess />
