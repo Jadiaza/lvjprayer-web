@@ -1,27 +1,10 @@
-import { Navbar } from "@/components/lvdj/Navbar";
-import { Hero } from "@/components/lvdj/Hero";
-import { RadioPlayer } from "@/components/lvdj/RadioPlayer";
-import { FeatureCards } from "@/components/lvdj/FeatureCards";
-import { Schedule } from "@/components/lvdj/Schedule";
-import { QuickAccess } from "@/components/lvdj/QuickAccess";
-import { Footer } from "@/components/lvdj/Footer";
-import { MobileNav } from "@/components/lvdj/MobileNav";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { MobileHome } from "@/components/lvdj/MobileHome";
+import { DesktopHome } from "@/components/lvdj/DesktopHome";
 
-const Index = () => (
-  <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-    <Navbar />
-    <main className="pb-24 lg:pb-0">
-      <Hero />
-      <section className="container -mt-8">
-        <RadioPlayer />
-      </section>
-      <FeatureCards />
-      <Schedule />
-      <QuickAccess />
-    </main>
-    <Footer />
-    <MobileNav />
-  </div>
-);
+const Index = () => {
+  const isMobile = useIsMobile();
+  return isMobile ? <MobileHome /> : <DesktopHome />;
+};
 
 export default Index;
