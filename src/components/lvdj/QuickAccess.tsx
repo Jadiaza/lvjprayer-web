@@ -17,8 +17,8 @@ export const QuickAccess = ({ compact = false }: { compact?: boolean }) => (
       Accesos Rápidos
     </div>
     <div
-      className={`grid gap-2 ${
-        compact ? "grid-cols-6" : "grid-cols-4 md:grid-cols-8"
+      className={`grid gap-2.5 ${
+        compact ? "grid-cols-3" : "grid-cols-4 md:grid-cols-8"
       }`}
     >
       {(compact ? items.slice(0, 6) : items).map((it) => (

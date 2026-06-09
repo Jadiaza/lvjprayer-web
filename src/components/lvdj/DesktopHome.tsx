@@ -1,13 +1,11 @@
-import { Bell } from "lucide-react";
+import { Bell, Radio as RadioIcon, User2, ChevronDown, Clock, Play, Church } from "lucide-react";
 import { Logo } from "./Logo";
 import { RadioCard } from "./RadioCard";
 import { QuickAccess } from "./QuickAccess";
 import { GospelCard } from "./GospelCard";
 import { ProgramCard } from "./ProgramCard";
 import { Footer } from "./Footer";
-import monstrance from "@/assets/monstrance-hero.jpg";
-import cathedral from "@/assets/cathedral-bg.jpg";
-import { Clock, Play } from "lucide-react";
+import desktopBg from "@/assets/desktop-bg.png.asset.json";
 
 const links = ["Inicio", "Radio", "Capilla", "Evangelio", "Comunidad", "Programación", "Contacto"];
 
@@ -26,8 +24,8 @@ export const DesktopHome = () => (
     {/* Top nav */}
     <header className="fixed top-0 inset-x-0 z-50">
       <div className="glass border-b border-[hsl(var(--gold)/0.15)]">
-        <div className="container flex items-center justify-between h-[76px] gap-6">
-          <Logo />
+        <div className="container flex items-center justify-between h-[88px] gap-6">
+          <Logo size="md" />
           <nav className="hidden lg:flex items-center gap-1">
             {links.map((l, i) => (
               <a
@@ -39,58 +37,78 @@ export const DesktopHome = () => (
               >
                 {l}
                 {i === 0 && (
-                  <span className="absolute left-1/2 -translate-x-1/2 -bottom-0.5 h-px w-6 bg-gradient-gold" />
+                  <span className="absolute left-1/2 -translate-x-1/2 -bottom-0.5 h-px w-8 bg-gradient-gold" />
                 )}
               </a>
             ))}
           </nav>
-          <button className="relative h-10 w-10 rounded-full glass gold-border flex items-center justify-center hover:text-gold transition">
-            <Bell className="h-4 w-4" />
-            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-gold ring-2 ring-background" />
-          </button>
+          <div className="flex items-center gap-3">
+            <button className="relative h-10 w-10 rounded-full glass gold-border flex items-center justify-center hover:text-gold transition">
+              <Bell className="h-4 w-4" />
+              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-gold ring-2 ring-background" />
+            </button>
+            <button className="hidden md:inline-flex items-center gap-2 gold-border rounded-full px-4 h-10 text-xs font-semibold uppercase tracking-wider text-gold hover:bg-gold/10 transition">
+              <RadioIcon className="h-4 w-4" /> En Vivo
+            </button>
+            <button className="hidden md:inline-flex items-center gap-2 glass rounded-full pl-1 pr-3 h-10 hover:border-[hsl(var(--gold)/0.5)] transition">
+              <span className="h-8 w-8 rounded-full bg-gradient-gold flex items-center justify-center">
+                <User2 className="h-4 w-4 text-navy-deep" />
+              </span>
+              <span className="text-xs font-medium">Mi cuenta</span>
+              <ChevronDown className="h-3 w-3 text-foreground/60" />
+            </button>
+          </div>
         </div>
       </div>
     </header>
 
-    <main className="pt-[76px]">
-      {/* Hero with centered monstrance */}
+    <main className="pt-[88px]">
+      {/* Hero band with desktop background */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10">
-          <img src={cathedral} alt="" className="w-full h-full object-cover opacity-40" />
-          <div className="absolute inset-0 bg-gradient-hero" />
+          <img src={desktopBg.url} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
         </div>
 
-        <div className="container pt-12 pb-16 flex flex-col items-center">
-          <div className="relative w-full max-w-[520px]">
-            <div className="absolute inset-0 -m-16 bg-gradient-radial-gold blur-3xl opacity-80" />
-            <div className="relative aspect-[3/4] rounded-[2rem] overflow-hidden gold-border shadow-deep float-slow">
-              <img
-                src={monstrance}
-                alt="Santísimo Sacramento"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-deep via-transparent to-transparent" />
+        <div className="container py-20 lg:py-28 grid lg:grid-cols-2 gap-10 items-center min-h-[520px]">
+          <div className="max-w-xl">
+            <h1 className="font-display text-5xl lg:text-6xl leading-[1.05]">
+              Adora al Santísimo
+              <br />
+              <span className="gold-text italic">las 24 horas</span>
+            </h1>
+            <div className="my-6 flex items-center gap-3">
+              <span className="h-px w-10 bg-gradient-gold" />
+              <span className="text-gold text-lg">✦</span>
+              <span className="h-px w-10 bg-gradient-gold" />
             </div>
+            <p className="text-foreground/75 text-base max-w-md leading-relaxed">
+              En nuestra Capilla Virtual puedes orar, adorar y estar en la presencia real de Jesús.
+            </p>
+            <button className="mt-8 inline-flex items-center gap-3 bg-gradient-gold text-navy-deep font-semibold px-6 py-3.5 rounded-full shadow-gold hover:scale-[1.02] transition">
+              <Church className="h-5 w-5" />
+              ENTRAR A LA CAPILLA VIRTUAL
+            </button>
           </div>
-
-          <div className="w-full max-w-2xl -mt-10 relative z-10">
-            <RadioCard />
-          </div>
-
-          <div className="w-full max-w-3xl mt-10">
-            <QuickAccess />
-          </div>
+          <div />
         </div>
       </section>
 
-      {/* Cards row */}
-      <section className="container py-12 grid md:grid-cols-2 gap-6">
-        <GospelCard />
-        <ProgramCard />
+      {/* Row: Radio · Evangelio · Próximo */}
+      <section className="container -mt-10 grid md:grid-cols-3 gap-5 relative z-10">
+        <div className="md:col-span-1"><RadioCard /></div>
+        <div className="md:col-span-1"><GospelCard /></div>
+        <div className="md:col-span-1"><ProgramCard /></div>
+      </section>
+
+      {/* Accesos rápidos */}
+      <section className="container mt-12">
+        <QuickAccess />
       </section>
 
       {/* Schedule */}
-      <section className="container pb-16">
+      <section className="container py-16">
         <div className="flex items-end justify-between flex-wrap gap-4 mb-6">
           <div>
             <div className="text-xs uppercase tracking-[0.3em] text-gold mb-2">En el aire</div>
