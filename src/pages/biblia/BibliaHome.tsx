@@ -16,6 +16,7 @@ import {
   Settings2,
   Download,
   ChevronRight,
+  type LucideIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BibliaLayout } from "./BibliaLayout";
@@ -25,7 +26,7 @@ import { libroById } from "@/features/biblia/books";
 interface Tile {
   to: string;
   label: string;
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: LucideIcon;
   ready?: boolean;
 }
 
