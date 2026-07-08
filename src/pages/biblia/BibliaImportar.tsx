@@ -87,17 +87,17 @@ export default function BibliaImportar() {
       await clearAllBibleData();
 
       // 2. versículos
-      let tx = db.transaction("versiculos", "readwrite");
-      const vStore = tx.objectStore("versiculos");
+      const txV = db.transaction("versiculos", "readwrite");
+      const vStore = txV.objectStore("versiculos");
       for (const v of preview.parsed.versiculos) {
         const id = `straubinger:${v.libroId}:${v.capitulo}:${v.versiculo}`;
         vStore.put({ id, version: "straubinger", ...v });
       }
-      await tx.done;
+      await txV.done;
 
       // 3. notas straubinger
-      tx = db.transaction("notas_straubinger", "readwrite");
-      const nStore = tx.objectStore("notas_straubinger");
+      const txN = db.transaction("notas_straubinger", "readwrite");
+      const nStore = txN.objectStore("notas_straubinger");
       const counter: Record<string, number> = {};
       for (const n of preview.notasParsed.notas) {
         const k = `${n.libroId}:${n.capitulo}:${n.versiculo}`;
@@ -105,7 +105,7 @@ export default function BibliaImportar() {
         const id = `${k}:${counter[k]}`;
         nStore.put({ id, ...n });
       }
-      await tx.done;
+      await txN.done;
 
       await setMeta("importDone", true);
       await setMeta("importFecha", Date.now());
