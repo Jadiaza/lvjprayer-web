@@ -1,11 +1,11 @@
-import { Home, Radio, BookOpen, CalendarRange, MoreHorizontal } from "lucide-react";
+import { Home, Radio, BookOpen, Music2, MoreHorizontal } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const items = [
   { icon: Home, label: "Inicio", to: "/" },
   { icon: Radio, label: "Radio", to: "#" },
   { icon: BookOpen, label: "Biblia", to: "/biblia" },
-  { icon: CalendarRange, label: "Programas", to: "#" },
+  { icon: Music2, label: "Música", to: "/musica" },
   { icon: MoreHorizontal, label: "Más", to: "#" },
 ];
 

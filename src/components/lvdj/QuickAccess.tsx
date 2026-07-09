@@ -1,10 +1,10 @@
-import { Church, Heart, Mic2, HandHeart, Users, BookOpen, CalendarRange, Gift } from "lucide-react";
+import { Church, Heart, Music2, HandHeart, Users, BookOpen, CalendarRange, Gift } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const items = [
   { icon: Church, label: "Capilla\nVirtual", to: "#" },
   { icon: Heart, label: "Rosario", to: "#" },
-  { icon: Mic2, label: "Podcast", to: "#" },
+  { icon: Music2, label: "Música", to: "/musica" },
   { icon: HandHeart, label: "Peticiones", to: "#" },
   { icon: Users, label: "Comunidad", to: "#" },
   { icon: BookOpen, label: "Biblia", to: "/biblia" },

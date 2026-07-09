@@ -9,6 +9,13 @@ import BibliaHome from "./pages/biblia/BibliaHome";
 import BibliaLeer from "./pages/biblia/BibliaLeer";
 import BibliaImportar from "./pages/biblia/BibliaImportar";
 import BibliaProximamente from "./pages/biblia/BibliaProximamente";
+import MusicaLayout from "./features/lavozfy/pages/MusicaLayout";
+import Home from "./features/lavozfy/pages/Home";
+import {
+  Albumes, Artistas, Canciones, Nuevos, Generos, Genero, Album, Artista,
+  Buscar, Explorar, Biblioteca, PlaylistPage,
+} from "./features/lavozfy/pages/Simple";
+import { Login, Registro, ResetPassword, Perfil } from "./features/lavozfy/pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +43,26 @@ const App = () => (
           <Route path="/biblia/cronologias" element={<BibliaProximamente title="Cronologías" />} />
           <Route path="/biblia/audio" element={<BibliaProximamente title="Audio Biblia" />} />
           <Route path="/biblia/configuracion" element={<BibliaProximamente title="Configuración" />} />
+          {/* LaVozFy — música */}
+          <Route path="/musica/login" element={<Login />} />
+          <Route path="/musica/registro" element={<Registro />} />
+          <Route path="/musica/reset-password" element={<ResetPassword />} />
+          <Route path="/musica" element={<MusicaLayout />}>
+            <Route index element={<Home />} />
+            <Route path="explorar" element={<Explorar />} />
+            <Route path="artistas" element={<Artistas />} />
+            <Route path="artista/:id" element={<Artista />} />
+            <Route path="albumes" element={<Albumes />} />
+            <Route path="album/:id" element={<Album />} />
+            <Route path="canciones" element={<Canciones />} />
+            <Route path="generos" element={<Generos />} />
+            <Route path="genero/:slug" element={<Genero />} />
+            <Route path="nuevos" element={<Nuevos />} />
+            <Route path="buscar" element={<Buscar />} />
+            <Route path="biblioteca" element={<Biblioteca />} />
+            <Route path="playlist/:id" element={<PlaylistPage />} />
+            <Route path="perfil" element={<Perfil />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
