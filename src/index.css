@@ -180,3 +180,34 @@
   background: linear-gradient(hsl(var(--gold) / 0.4), hsl(var(--gold-deep) / 0.6));
   border-radius: 8px;
 }
+
+/* ============================================================
+   LaVozFy — plataforma musical (scope: .lavozfy)
+   Tokens propios, no interfieren con el tema dorado/navy.
+   ============================================================ */
+.lavozfy {
+  --lv-bg: 240 12% 11%;
+  --lv-sidebar: 240 12% 9%;
+  --lv-panel: 240 11% 15%;
+  --lv-panel-2: 240 10% 18%;
+  --lv-green: 92 39% 52%;
+  --lv-green-hover: 92 45% 45%;
+  --lv-gold: 42 45% 58%;
+  --lv-text: 43 33% 94%;
+  --lv-text-muted: 240 6% 68%;
+  --lv-border: rgba(255, 255, 255, 0.08);
+  font-family: 'Inter', system-ui, sans-serif;
+  color: hsl(var(--lv-text));
+  background: hsl(var(--lv-bg));
+}
+.lavozfy h1, .lavozfy h2, .lavozfy h3, .lavozfy h4 {
+  font-family: 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+.lv-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.lv-scroll::-webkit-scrollbar-track { background: transparent; }
+.lv-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+}
+.lv-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
