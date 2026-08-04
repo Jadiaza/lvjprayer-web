@@ -78,7 +78,9 @@ export const RosarioDigital = () => {
           <RosaryBeadRing
             section={s.section}
             currentBeadId={s.bead.id}
-            onSelect={(i) => s.jumpToSection(s.session!.sectionIndex) || undefined}
+            onSelect={() => {
+              /* Indicador de progreso: el avance se hace con los botones. */
+            }}
           />
           <PrayerStepCard
             bead={s.bead}
