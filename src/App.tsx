@@ -9,6 +9,8 @@ import BibliaHome from "./pages/biblia/BibliaHome";
 import BibliaLeer from "./pages/biblia/BibliaLeer";
 import BibliaImportar from "./pages/biblia/BibliaImportar";
 import BibliaProximamente from "./pages/biblia/BibliaProximamente";
+import RosarioHome from "./modules/rosary/pages/RosarioHome";
+import RosarioDigital from "./modules/rosary/pages/RosarioDigital";
 import MusicaLayout from "./features/lavozfy/pages/MusicaLayout";
 import Home from "./features/lavozfy/pages/Home";
 import {
@@ -43,6 +45,9 @@ const App = () => (
           <Route path="/biblia/cronologias" element={<BibliaProximamente title="Cronologías" />} />
           <Route path="/biblia/audio" element={<BibliaProximamente title="Audio Biblia" />} />
           <Route path="/biblia/configuracion" element={<BibliaProximamente title="Configuración" />} />
+          {/* Santo Rosario */}
+          <Route path="/rosario" element={<RosarioHome />} />
+          <Route path="/rosario/digital" element={<RosarioDigital />} />
           {/* LaVozFy — música */}
           <Route path="/musica/login" element={<Login />} />
           <Route path="/musica/registro" element={<Registro />} />
