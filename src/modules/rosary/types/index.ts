@@ -166,6 +166,10 @@ export interface RosaryPreferences {
   speed: number;
   keepAwake: boolean;
   manualCounter: boolean;
+  voice: RosaryVoiceId;
+  nightMode: boolean;
+  rememberChoice: boolean;
+  crossfade: boolean;
 }
 
 /** Voz de la guía en el modo audio. */
