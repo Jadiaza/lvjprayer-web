@@ -1,39 +1,38 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CircleDot, Headphones, Sparkles, WifiOff } from "lucide-react";
+import { ChevronRight, Info, NotebookPen, WifiOff } from "lucide-react";
 import { RosaryLayout } from "../components/RosaryLayout";
 import { RosaryLoading } from "../components/RosaryStateViews";
 import { useRosaryToday } from "../hooks/useRosaryToday";
-import { useRosaryPreferences } from "../hooks/useRosaryPreferences";
+import { useRosaryFlow } from "../hooks/useRosaryFlow";
 import { mysteryGroups } from "../mocks/mysteries";
+import { mysteryArt } from "../mocks/mysteryArt";
 import { rosarySessionService } from "../services/rosarySessionService";
 import { rosaryTodayService } from "../services/rosaryTodayService";
-import type { MysteryGroupId, RosaryModeId, RosarySession } from "../types";
+import { routeForMode } from "../utils/routes";
+import type { MysteryGroupId, RosarySession } from "../types";
 
-const MODES: Array<{ id: RosaryModeId; label: string; description: string; icon: typeof CircleDot; to: string }> = [
-  { id: "digital", label: "Rosario digital", description: "Guiado paso a paso con textos", icon: Sparkles, to: "/rosario/digital" },
-  { id: "physical", label: "Rosario físico", description: "Con tu rosario en la mano", icon: CircleDot, to: "/rosario/fisico" },
-  { id: "audio", label: "Rosario en audio", description: "Escucha y acompaña", icon: Headphones, to: "/rosario/audio" },
-];
-
+/** Pantalla 2: portada del Rosario con los misterios del día. */
 export const RosarioHome = () => {
   const today = useRosaryToday();
   const navigate = useNavigate();
-  const { prefs, update } = useRosaryPreferences();
+  const { flow, update } = useRosaryFlow();
   const [resume, setResume] = useState<RosarySession | null>(null);
 
   useEffect(() => {
     setResume(rosarySessionService.load());
   }, []);
 
-  const group: MysteryGroupId =
+  const suggested: MysteryGroupId =
     today.status === "ready" ? today.data.recommendedGroup : rosaryTodayService.groupForDate();
+  const group = flow.group ?? suggested;
   const groupData = mysteryGroups[group];
   const longDate = useMemo(() => rosaryTodayService.longDate(), []);
+  const season = today.status === "ready" ? today.data.season?.nombre ?? "Tiempo Ordinario" : "";
 
-  const start = (mode: RosaryModeId, to: string) => {
-    update({ lastMode: mode });
-    navigate(`${to}?grupo=${group}`);
+  const startFlow = () => {
+    update({ group });
+    navigate("/rosario/modalidad");
   };
 
   return (
@@ -41,41 +40,56 @@ export const RosarioHome = () => {
       {today.status === "loading" ? (
         <RosaryLoading label="Cargando los misterios de hoy" />
       ) : (
-        <section className="glass gold-border rounded-3xl p-5">
-          <p className="text-[10px] uppercase tracking-[0.28em] text-gold/80">Misterios de hoy</p>
-          <h2 className="font-display text-3xl mt-1 gold-text">{groupData.name}</h2>
-          <p className="text-sm text-muted-foreground mt-2">{groupData.description}</p>
-          <p className="text-xs text-gold/90 mt-3">
-            {today.status === "ready" ? today.data.reasonLabel : ""}
-          </p>
-          {today.status === "ready" && today.data.offlineFallback && (
-            <p className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-              <WifiOff className="h-3.5 w-3.5" aria-hidden="true" />
-              Calculado en tu dispositivo (sin datos litúrgicos del servidor).
-            </p>
-          )}
-          <button
-            type="button"
-            onClick={() => start(prefs.lastMode ?? "digital", prefs.lastMode === "audio" ? "/rosario/audio" : prefs.lastMode === "physical" ? "/rosario/fisico" : "/rosario/digital")}
-            className="mt-4 w-full min-h-12 rounded-full bg-gradient-gold text-navy-deep font-medium"
-          >
-            Comenzar el Rosario
-          </button>
+        <section className="glass gold-border rounded-3xl overflow-hidden">
+          <div className="px-5 pt-5 text-center">
+            <p className="text-xs text-muted-foreground">{longDate}</p>
+            <p className="text-xs text-gold/90 mt-0.5">{season}</p>
+            <h2 className="font-display text-3xl mt-2 gold-text uppercase tracking-wide">{groupData.name}</h2>
+            <p className="text-sm text-muted-foreground mt-2">{groupData.description}</p>
+          </div>
+          <img
+            src={mysteryArt[group]}
+            alt={`Arte sacro de los ${groupData.name}`}
+            width={1024}
+            height={640}
+            className="mt-4 h-44 w-full object-cover border-y border-[hsl(var(--gold)/0.2)]"
+          />
+          <div className="p-5 space-y-3">
+            <button
+              type="button"
+              onClick={startFlow}
+              className="w-full min-h-12 rounded-xl bg-gradient-gold text-navy-deep font-medium uppercase tracking-[0.12em]"
+            >
+              Rezar el Rosario
+            </button>
+            <Link
+              to="/rosario/seleccionar-misterios"
+              className="flex items-center justify-center gap-1 text-sm text-gold min-h-11"
+            >
+              Cambiar misterios
+              <ChevronRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            {today.status === "ready" && today.data.offlineFallback && (
+              <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                <WifiOff className="h-3.5 w-3.5" aria-hidden="true" />
+                Calculado en tu dispositivo.
+              </p>
+            )}
+          </div>
         </section>
       )}
 
       {resume && resume.status !== "terminado" && (
-        <section className="mt-4 glass gold-border rounded-3xl p-4 flex items-center gap-3">
-          <div className="min-w-0">
-            <p className="text-sm">Tienes un rosario sin terminar</p>
-            <p className="text-xs text-muted-foreground truncate">
-              {mysteryGroups[resume.group].name} · modo {resume.mode === "audio" ? "audio" : resume.mode === "physical" ? "físico" : "digital"}
-            </p>
-          </div>
-          <div className="ml-auto flex gap-2">
+        <section className="mt-4 glass gold-border rounded-3xl p-5 text-center space-y-3">
+          <h3 className="font-display text-2xl">Continúa tu Rosario</h3>
+          <p className="text-sm text-gold/90">{mysteryGroups[resume.group].name}</p>
+          <p className="text-xs text-muted-foreground">
+            Modalidad {resume.mode === "audio" ? "por audio" : resume.mode === "physical" ? "con mi rosario" : "cuentas digitales"}
+          </p>
+          <div className="flex flex-col gap-2">
             <Link
-              to={`${resume.mode === "audio" ? "/rosario/audio" : resume.mode === "physical" ? "/rosario/fisico" : "/rosario/digital"}?grupo=${resume.group}`}
-              className="min-h-11 px-4 flex items-center rounded-full bg-gradient-gold text-navy-deep text-sm font-medium"
+              to={`${routeForMode(resume.mode)}?grupo=${resume.group}`}
+              className="min-h-11 flex items-center justify-center rounded-xl bg-gradient-gold text-navy-deep text-sm font-medium uppercase tracking-[0.12em]"
             >
               Continuar
             </Link>
@@ -84,39 +98,46 @@ export const RosarioHome = () => {
               onClick={() => {
                 rosarySessionService.clear();
                 setResume(null);
+                startFlow();
               }}
-              className="min-h-11 px-3 text-xs text-muted-foreground"
+              className="min-h-11 rounded-xl gold-border text-sm"
             >
-              Descartar
+              Comenzar el Rosario de hoy
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                rosarySessionService.clear();
+                setResume(null);
+              }}
+              className="min-h-11 rounded-xl border border-[hsl(0_60%_45%/0.5)] text-sm text-[hsl(0_70%_70%)]"
+            >
+              Descartar sesión
             </button>
           </div>
         </section>
       )}
 
-      <h2 className="font-display text-xl mt-6 mb-2">Elige cómo quieres rezar</h2>
-      <ul className="grid gap-3 sm:grid-cols-3">
-        {MODES.map((m) => (
-          <li key={m.id}>
-            <button
-              type="button"
-              onClick={() => start(m.id, m.to)}
-              className="w-full h-full text-left glass gold-border rounded-3xl p-4 hover:border-gold transition"
-            >
-              <m.icon className="h-6 w-6 text-gold" aria-hidden="true" />
-              <p className="font-display text-lg mt-2">{m.label}</p>
-              <p className="text-xs text-muted-foreground">{m.description}</p>
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <Link
-        to="/rosario/misterios"
-        className="mt-4 flex items-center justify-between glass gold-border rounded-3xl p-4"
-      >
-        <span className="text-sm">Explorar los misterios y sus meditaciones</span>
-        <span className="text-gold text-sm">Ver</span>
-      </Link>
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <Link to="/rosario/misterios" className="glass gold-border rounded-2xl p-4 text-sm flex items-center justify-between">
+          Ver solamente los misterios
+          <ChevronRight className="h-4 w-4 text-gold" aria-hidden="true" />
+        </Link>
+        <Link to="/rosario/diario" className="glass gold-border rounded-2xl p-4 text-sm flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <NotebookPen className="h-4 w-4 text-gold" aria-hidden="true" />
+            Diario espiritual
+          </span>
+          <ChevronRight className="h-4 w-4 text-gold" aria-hidden="true" />
+        </Link>
+        <Link to="/rosario/informacion" className="glass gold-border rounded-2xl p-4 text-sm flex items-center justify-between">
+          <span className="flex items-center gap-2">
+            <Info className="h-4 w-4 text-gold" aria-hidden="true" />
+            Información del módulo
+          </span>
+          <ChevronRight className="h-4 w-4 text-gold" aria-hidden="true" />
+        </Link>
+      </div>
     </RosaryLayout>
   );
 };
