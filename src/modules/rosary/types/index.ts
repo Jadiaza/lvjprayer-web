@@ -168,6 +168,36 @@ export interface RosaryPreferences {
   manualCounter: boolean;
 }
 
+/** Voz de la guía en el modo audio. */
+export type RosaryVoiceId = "femenina1" | "femenina2" | "masculina1";
+
+/** Alcance del rezo: rosario completo (20 misterios) o una sola decena. */
+export type RosaryScope = "completo" | "decena";
+
+/** Configuración transitoria del flujo de rezo (portada → modalidad → rezo). */
+export interface RosaryFlow {
+  group: MysteryGroupId | null;
+  mode: RosaryModeId | null;
+  scope: RosaryScope;
+  startDecade: number;
+  intention: RosaryIntention | null;
+}
+
+export interface RosaryJournalEntry {
+  id: string;
+  date: string;
+  group: MysteryGroupId | null;
+  text: string;
+}
+
+export interface RosaryDownloadItem {
+  id: string;
+  group: MysteryGroupId;
+  label: string;
+  sizeLabel: string;
+  downloaded: boolean;
+}
+
 export type AudioSegmentKind =
   | "introduccion"
   | "senal_cruz"
