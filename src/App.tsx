@@ -11,6 +11,16 @@ import BibliaImportar from "./pages/biblia/BibliaImportar";
 import BibliaProximamente from "./pages/biblia/BibliaProximamente";
 import RosarioHome from "./modules/rosary/pages/RosarioHome";
 import RosarioDigital from "./modules/rosary/pages/RosarioDigital";
+import RosarioModalidad from "./modules/rosary/pages/RosarioModalidad";
+import RosarioIntencion from "./modules/rosary/pages/RosarioIntencion";
+import RosarioSeleccionMisterios from "./modules/rosary/pages/RosarioSeleccionMisterios";
+import RosarioConfiguracion from "./modules/rosary/pages/RosarioConfiguracion";
+import RosarioFisico from "./modules/rosary/pages/RosarioFisico";
+import RosarioAudio from "./modules/rosary/pages/RosarioAudio";
+import RosarioMisterios from "./modules/rosary/pages/RosarioMisterios";
+import RosarioDescargas from "./modules/rosary/pages/RosarioDescargas";
+import RosarioDiario from "./modules/rosary/pages/RosarioDiario";
+import RosarioInfo from "./modules/rosary/pages/RosarioInfo";
 import MusicaLayout from "./features/lavozfy/pages/MusicaLayout";
 import Home from "./features/lavozfy/pages/Home";
 import {
@@ -47,6 +57,16 @@ const App = () => (
           <Route path="/biblia/configuracion" element={<BibliaProximamente title="Configuración" />} />
           {/* Santo Rosario */}
           <Route path="/rosario" element={<RosarioHome />} />
+          <Route path="/rosario/modalidad" element={<RosarioModalidad />} />
+          <Route path="/rosario/intencion" element={<RosarioIntencion />} />
+          <Route path="/rosario/seleccionar-misterios" element={<RosarioSeleccionMisterios />} />
+          <Route path="/rosario/configuracion" element={<RosarioConfiguracion />} />
+          <Route path="/rosario/misterios" element={<RosarioMisterios />} />
+          <Route path="/rosario/fisico" element={<RosarioFisico />} />
+          <Route path="/rosario/audio" element={<RosarioAudio />} />
+          <Route path="/rosario/descargas" element={<RosarioDescargas />} />
+          <Route path="/rosario/diario" element={<RosarioDiario />} />
+          <Route path="/rosario/informacion" element={<RosarioInfo />} />
           <Route path="/rosario/digital" element={<RosarioDigital />} />
           {/* LaVozFy — música */}
           <Route path="/musica/login" element={<Login />} />
