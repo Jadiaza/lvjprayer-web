@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { rosaryRepository } from "../services/rosaryRepository";
 import { rosarySessionService } from "../services/rosarySessionService";
-import { totalBeads } from "../utils/buildRosary";
+import { buildRosaryDefinition, totalBeads } from "../utils/buildRosary";
 import type {
   MysteryGroupId,
   RosaryBead,
@@ -16,6 +16,10 @@ interface Options {
   mode: RosaryModeId;
   intention?: RosaryIntention | null;
   haptics?: boolean;
+  /** Número de decenas: 5 (rosario) o 1 (una sola decena). */
+  decades?: number;
+  /** Decena inicial cuando se reza una sola. */
+  startDecade?: number;
 }
 
 const vibrate = (ms = 12) => {
@@ -30,7 +34,14 @@ const vibrate = (ms = 12) => {
  * Máquina de avance del Rosario: posición, progreso, persistencia y
  * reanudación. No conoce la UI ni el transporte de datos.
  */
-export const useRosarySession = ({ group, mode, intention = null, haptics = true }: Options) => {
+export const useRosarySession = ({
+  group,
+  mode,
+  intention = null,
+  haptics = true,
+  decades = 5,
+  startDecade = 1,
+}: Options) => {
   const [definition, setDefinition] = useState<RosaryDefinition | null>(null);
   const [session, setSession] = useState<RosarySession | null>(null);
   const [completed, setCompleted] = useState(false);
@@ -38,7 +49,11 @@ export const useRosarySession = ({ group, mode, intention = null, haptics = true
 
   useEffect(() => {
     let active = true;
-    rosaryRepository.getDefinition(group).then((def) => {
+    const load =
+      decades === 5
+        ? rosaryRepository.getDefinition(group)
+        : Promise.resolve(buildRosaryDefinition({ group, groups: decades }));
+    load.then((def) => {
       if (!active) return;
       setDefinition(def);
       const saved = rosarySessionService.load();
@@ -52,7 +67,7 @@ export const useRosarySession = ({ group, mode, intention = null, haptics = true
       active = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [group, mode]);
+  }, [group, mode, decades, startDecade]);
 
   const persist = useCallback((next: RosarySession) => {
     const withTime: RosarySession = {
