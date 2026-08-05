@@ -22,6 +22,10 @@ export const defaultPreferences: RosaryPreferences = {
   speed: 1,
   keepAwake: true,
   manualCounter: true,
+  voice: "femenina1",
+  nightMode: true,
+  rememberChoice: true,
+  crossfade: true,
 };
 
 export interface RosaryStats {
