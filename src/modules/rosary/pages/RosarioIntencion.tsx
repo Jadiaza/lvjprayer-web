@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Church, Cross, Dove, HeartHandshake, PenLine, Stethoscope, User, Users } from "lucide-react";
+import { Bird, Church, Cross, HeartHandshake, PenLine, Stethoscope, User, Users } from "lucide-react";
 import { RosaryLayout } from "../components/RosaryLayout";
 import { RosaryRadioRow } from "../components/RosaryRows";
 import { useRosaryFlow } from "../hooks/useRosaryFlow";
@@ -13,7 +13,7 @@ const OPTIONS: Array<{ kind: RosaryIntentionKind; label: string; icon: typeof Us
   { kind: "difunto", label: "Un difunto", icon: Cross },
   { kind: "iglesia", label: "La Iglesia", icon: Church },
   { kind: "sacerdotes", label: "Los sacerdotes", icon: HeartHandshake },
-  { kind: "paz", label: "La paz", icon: Dove },
+  { kind: "paz", label: "La paz", icon: Bird },
   { kind: "virgen", label: "Las intenciones de la Virgen María", icon: HeartHandshake },
   { kind: "otra", label: "Escribir otra intención", icon: PenLine },
 ];
