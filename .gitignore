@@ -1,0 +1,25 @@
+﻿# Local environment variables and credentials
+.env
+.env.*
+!.env.example
+
+# Dependencies and generated build output
+node_modules/
+dist/
+dist-admin/
+dist-hosting/
+.swc-cache/
+coverage/
+
+# Local editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Private keys and local server configuration
+*.pem
+*.key
+*.p12
+*.pfx
+config.local.php

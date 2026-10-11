@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :root {
+    --background: 218 48% 7%;
+    --foreground: 42 20% 95%;
+    --card: 218 39% 11%;
+    --card-foreground: 42 20% 95%;
+    --popover: 218 39% 11%;
+    --popover-foreground: 42 20% 95%;
+    --primary: 42 72% 58%;
+    --primary-foreground: 218 48% 8%;
+    --secondary: 216 34% 16%;
+    --secondary-foreground: 42 20% 92%;
+    --muted: 216 30% 14%;
+    --muted-foreground: 216 15% 65%;
+    --accent: 205 45% 54%;
+    --accent-foreground: 218 48% 8%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 216 24% 22%;
+    --input: 216 24% 22%;
+    --ring: 42 72% 58%;
+    --radius: 0.25rem;
+    --sidebar-background: 218 44% 9%;
+    --sidebar-foreground: 42 20% 92%;
+    --sidebar-primary: 42 72% 58%;
+    --sidebar-primary-foreground: 218 48% 8%;
+    --sidebar-accent: 216 30% 14%;
+    --sidebar-accent-foreground: 42 20% 92%;
+    --sidebar-border: 216 24% 22%;
+    --sidebar-ring: 42 72% 58%;
+    --lvj-gold: 42 72% 58%;
+    --lvj-blue: 205 45% 54%;
+    --lvj-dark: 218 48% 7%;
+    --font-display: 'Oswald', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; font-family: var(--font-body); }
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
+  ::selection { background: hsl(var(--primary) / .3); }
+}
+
+@layer utilities {
+  .text-gradient-lvj {
+    background: linear-gradient(130deg, hsl(42 78% 68%), hsl(205 55% 72%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .bg-gradient-lvj { background: linear-gradient(130deg, hsl(42 72% 58%), hsl(34 71% 48%)); }
+  .overlay-dark { background: linear-gradient(to top, hsla(218, 48%, 7%, .9), hsla(218, 48%, 7%, .12) 60%, hsla(218, 48%, 7%, .08)); }
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
