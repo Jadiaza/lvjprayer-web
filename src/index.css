@@ -59,3 +59,7 @@
 
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+/* Recolor fixed demo surfaces when an editor schedules a liturgical palette. */
+:root[data-liturgical-season] .bg-\\[\\#0a1629\\] { background-color: hsl(var(--card)) !important; }
+:root[data-liturgical-season] .bg-\\[\\#071020\\] { background-color: hsl(var(--background)) !important; }
