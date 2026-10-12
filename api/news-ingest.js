@@ -45,27 +45,26 @@ export default async function handler(req, res) {
   if (process.env.NEWS_FEEDS) {
     try { feeds = JSON.parse(process.env.NEWS_FEEDS); }
     catch { return res.status(500).json({ error: "NEWS_FEEDS must be a JSON array" }); }
-  } else {
-    try {
-      const authHeaders = { apikey: serverKey };
-      if (!serverKey.startsWith("sb_")) authHeaders.authorization = `Bearer ${serverKey}`;
-      const sourceResponse = await fetch(
-        `${projectUrl}/rest/v1/news_sources?select=name,feed_url,region&is_enabled=eq.true&order=name.asc`,
-        { headers: authHeaders, signal: AbortSignal.timeout(10000) },
-      );
-      if (sourceResponse.ok) {
-        const configuredSources = await sourceResponse.json();
-        if (Array.isArray(configuredSources) && configuredSources.length > 0) {
-          feeds = configuredSources.map((source) => ({
-            name: source.name,
-            url: source.feed_url,
-            region: source.region,
-          }));
-        }
+  }
+  try {
+    const authHeaders = { apikey: serverKey };
+    if (!serverKey.startsWith("sb_")) authHeaders.authorization = `Bearer ${serverKey}`;
+    const sourceResponse = await fetch(
+      `${projectUrl}/rest/v1/news_sources?select=name,feed_url,region&is_enabled=eq.true&order=name.asc`,
+      { headers: authHeaders, signal: AbortSignal.timeout(10000) },
+    );
+    if (sourceResponse.ok) {
+      const configuredSources = await sourceResponse.json();
+      if (Array.isArray(configuredSources) && configuredSources.length > 0) {
+        feeds = configuredSources.map((source) => ({
+          name: source.name,
+          url: source.feed_url,
+          region: source.region,
+        }));
       }
-    } catch {
-      // Use the conservative built-in feeds if the optional source list is unavailable.
     }
+  } catch {
+    // Use the environment or built-in feeds if the optional source list is unavailable.
   }
   const results = [];
   for (const feed of feeds) {
