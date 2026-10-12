@@ -7,6 +7,9 @@ create table if not exists public.programs (
   slug text not null unique,
   summary text not null default '',
   host_name text,
+  weekday text not null default 'Todos los días' check (weekday in ('Todos los días','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo')),
+  start_time time,
+  end_time time,
   schedule_text text,
   stream_url text,
   cover_url text,
@@ -139,7 +142,11 @@ begin
     execute format('grant select on public.%I to anon, authenticated', table_name);
     execute format('grant insert, update, delete on public.%I to authenticated', table_name);
     execute format('drop policy if exists "Public published read" on public.%I', table_name);
-    execute format('create policy "Public published read" on public.%I for select to anon, authenticated using (status = ''published'' or public.has_role((select auth.uid()), ''admin''::public.app_role) or public.has_role((select auth.uid()), ''editor''::public.app_role))', table_name);
+    if table_name = 'liturgical_themes' then
+      execute format('create policy "Public published read" on public.%I for select to anon, authenticated using ((status in (''scheduled'',''active'') and current_date between start_date and end_date) or public.has_role((select auth.uid()), ''admin''::public.app_role) or public.has_role((select auth.uid()), ''editor''::public.app_role))', table_name);
+    else
+      execute format('create policy "Public published read" on public.%I for select to anon, authenticated using (status = ''published'' or public.has_role((select auth.uid()), ''admin''::public.app_role) or public.has_role((select auth.uid()), ''editor''::public.app_role))', table_name);
+    end if;
     execute format('drop policy if exists "Editors insert" on public.%I', table_name);
     execute format('create policy "Editors insert" on public.%I for insert to authenticated with check (public.has_role((select auth.uid()), ''admin''::public.app_role) or public.has_role((select auth.uid()), ''editor''::public.app_role))', table_name);
     execute format('drop policy if exists "Editors update" on public.%I', table_name);
