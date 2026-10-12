@@ -9,6 +9,7 @@ import LunaPlayer from "@/components/LunaPlayer";
 import Index from "@/pages/Index";
 import News from "@/pages/News";
 import NewsAdmin from "@/pages/NewsAdmin";
+import CMSAdmin from "@/pages/CMSAdmin";
 import Schedule from "@/pages/Schedule";
 import Videos from "@/pages/Videos";
 import Charts from "@/pages/Charts";
@@ -19,8 +20,9 @@ const queryClient = new QueryClient();
 
 const SiteLayout = () => {
   const location = useLocation();
-  if (import.meta.env.MODE === "admin") return <NewsAdmin />;
   const isAdmin = location.pathname.startsWith("/admin");
+  const adminHome = import.meta.env.MODE === "admin" ? <CMSAdmin /> : <NewsAdmin />;
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {!isAdmin && <Header />}
@@ -30,7 +32,8 @@ const SiteLayout = () => {
         <Route path="/blog-sidebar" element={<Navigate to="/noticias" replace />} />
         <Route path="/noticias" element={<News />} />
         <Route path="/noticias/:slug" element={<News />} />
-        {import.meta.env.MODE !== "hosting" && <Route path="/admin" element={<NewsAdmin />} />}
+        {import.meta.env.MODE !== "hosting" && <Route path="/admin" element={adminHome} />}
+        {import.meta.env.MODE !== "hosting" && <Route path="/admin/noticias" element={<NewsAdmin />} />}
         <Route path="/shows-schedule" element={<Schedule />} />
         <Route path="/videos-elementor" element={<Videos />} />
         <Route path="/charts-elementor" element={<Charts />} />
