@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 export type PublicProgram = {
   id: string;
   title: string;
@@ -57,4 +59,14 @@ export function getPublicCollection<T>(type: string): Promise<T[]> {
 
   cache.set(type, { expires: Date.now() + 60_000, promise });
   return promise as Promise<T[]>;
+}
+
+export function usePublicSettings(): Record<string, unknown> {
+  const [settings, setSettings] = useState<Record<string, unknown>>({});
+  useEffect(() => {
+    getPublicCollection<{ key: string; value: unknown }>("settings")
+      .then((rows) => setSettings(Object.fromEntries(rows.map((row) => [row.key, row.value]))))
+      .catch(() => setSettings({}));
+  }, []);
+  return settings;
 }
