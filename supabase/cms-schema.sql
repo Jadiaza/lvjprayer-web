@@ -178,3 +178,22 @@ create policy "Editors delete settings" on public.site_settings for delete to au
 -- The public policy evaluates has_role() as anon; the helper only returns true when its UUID
 -- matches auth.uid(), so unauthenticated calls cannot test another user's role.
 grant execute on function public.has_role(uuid, public.app_role) to anon;
+
+-- RSS/Atom subscriptions are configured in the editorial panel. Only the Vercel
+-- ingestion function reads enabled URLs; site visitors never receive the list.
+create table if not exists public.news_sources (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  feed_url text not null unique check (feed_url ~ '^https://'),
+  region text not null default 'universal' check (region in ('universal','colombia','local')),
+  is_enabled boolean not null default true,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.news_sources enable row level security;
+revoke all on public.news_sources from anon, authenticated;
+grant select, insert, update, delete on public.news_sources to authenticated;
+drop policy if exists "Editors manage news sources" on public.news_sources;
+create policy "Editors manage news sources" on public.news_sources for all to authenticated
+  using (public.has_role((select auth.uid()), 'admin'::public.app_role) or public.has_role((select auth.uid()), 'editor'::public.app_role))
+  with check (public.has_role((select auth.uid()), 'admin'::public.app_role) or public.has_role((select auth.uid()), 'editor'::public.app_role));
