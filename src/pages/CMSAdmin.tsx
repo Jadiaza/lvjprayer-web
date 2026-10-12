@@ -122,7 +122,7 @@ const modules: Module[] = [
     ],
   },
   {
-    key: "media", title: "Biblioteca de medios", table: "media_assets", description: "Catálogo de imágenes, audios y videos mediante URL.",
+    key: "media", title: "Biblioteca de medios", table: "lvj_cms_media", description: "Catálogo de imágenes, audios y videos mediante URL.",
     icon: Image, sortBy: "updated_at",
     fields: [
       { key: "title", label: "Nombre del recurso", required: true },
