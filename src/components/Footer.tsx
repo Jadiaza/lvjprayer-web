@@ -8,13 +8,14 @@ const Footer = () => {
   const settings = usePublicSettings();
   const socials = settings.social_links && typeof settings.social_links === "object" ? settings.social_links as Record<string, unknown> : {};
   const description = typeof settings.footer_description === "string" ? settings.footer_description : "Emisora católica que acompaña tu día con música, oración, formación y esperanza.";
+  const logoUrl = typeof settings.logo_url === "string" && /^https:\/\//i.test(settings.logo_url) ? settings.logo_url : "/images/lvj-emblema.png";
   const brandName = typeof settings.brand_name === "string" ? settings.brand_name : "LA VOZ DE JESÚS";
 
   return <footer className="border-t border-border bg-[#071020]">
     <div className="mx-auto grid max-w-[1440px] gap-9 px-5 py-10 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr] lg:px-12">
       <div>
         <Link to="/" className="flex items-center gap-3">
-          <img src="/images/lvj-emblema.png" alt="" className="h-12 w-12 object-contain" />
+          <img src={logoUrl} alt="" className="h-12 w-12 object-contain" />
           <span className="font-display text-sm font-bold tracking-[.15em] text-foreground">{brandName}</span>
         </Link>
         <p className="mt-4 max-w-sm text-xs leading-6 text-muted-foreground">{description}</p>
