@@ -6,6 +6,7 @@ create table if not exists public.programs (
   title text not null,
   slug text not null unique,
   summary text not null default '',
+  category text not null default 'Programación',
   host_name text,
   weekday text not null default 'Todos los días' check (weekday in ('Todos los días','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo')),
   start_time time,
