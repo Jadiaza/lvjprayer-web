@@ -35,6 +35,7 @@ const modules: Module[] = [
       { key: "title", label: "Nombre del programa", required: true },
       { key: "slug", label: "URL amigable", required: true },
       { key: "summary", label: "Descripción", kind: "textarea" },
+      { key: "category", label: "Categoría" },
       { key: "host_name", label: "Presentador" },
       { key: "weekday", label: "Día", kind: "select", options: ["Todos los días", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] },
       { key: "start_time", label: "Hora de inicio", kind: "time" },
