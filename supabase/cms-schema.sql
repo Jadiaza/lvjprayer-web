@@ -89,7 +89,7 @@ create table if not exists public.content_pages (
   updated_at timestamptz not null default now()
 );
 
-create table if not exists public.media_assets (
+create table if not exists public.lvj_cms_media (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   asset_type text not null check (asset_type in ('image','audio','video','document')),
@@ -131,13 +131,13 @@ create index if not exists artists_public_order on public.artists(name) where st
 create index if not exists videos_public_order on public.videos(published_at desc) where status = 'published';
 create index if not exists playlists_public_order on public.playlists(published_at desc) where status = 'published';
 create index if not exists content_pages_public_slug on public.content_pages(slug) where status = 'published';
-create index if not exists media_assets_public_type on public.media_assets(asset_type) where status = 'published';
+create index if not exists lvj_cms_media_public_type on public.lvj_cms_media(asset_type) where status = 'published';
 
 -- Public clients can only read published records. Editors manage all records through Supabase Auth.
 do $$
 declare table_name text;
 begin
-  foreach table_name in array array['programs','audio_items','artists','videos','playlists','content_pages','media_assets','liturgical_themes'] loop
+  foreach table_name in array array['programs','audio_items','artists','videos','playlists','content_pages','lvj_cms_media','liturgical_themes'] loop
     execute format('alter table public.%I enable row level security', table_name);
     execute format('revoke all on public.%I from anon, authenticated', table_name);
     execute format('grant select on public.%I to anon, authenticated', table_name);
