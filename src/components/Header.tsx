@@ -21,7 +21,7 @@ const Header = () => {
   const brandTagline = typeof settings.brand_tagline === "string" ? settings.brand_tagline : "RADIO CATÓLICA · COLOMBIA";
   const logoUrl = typeof settings.logo_url === "string" && /^https:\/\//i.test(settings.logo_url) ? settings.logo_url : "/images/lvj-emblema.png";
   const navigation = Array.isArray(settings.navigation)
-    ? settings.navigation.filter((item): item is { label: string; href: string } => !!item && typeof item === "object" && "label" in item && "href" in item && typeof item.label === "string" && typeof item.href === "string" && (item.href.startsWith("/") && !item.href.startsWith("//") || item.href.startsWith("https://")))
+    ? settings.navigation.filter((item): item is { label: string; href: string } => !!item && typeof item === "object" && "label" in item && "href" in item && typeof item.label === "string" && typeof item.href === "string" && (item.href.startsWith("/") && !item.href.startsWith("//")))
     : navItems;
   const closeMenu = () => setMobileOpen(false);
 
