@@ -33,7 +33,7 @@ const SiteLayout = () => {
       {!isAdmin && <Header />}
       {!isAdmin && <LunaPlayer />}
       <Routes>
-        <Route path="/" element={<Index />} />
+        <Route path="/" element={import.meta.env.MODE === "admin" ? <Navigate to="/admin" replace /> : <Index />} />
         <Route path="/blog-sidebar" element={<Navigate to="/noticias" replace />} />
         <Route path="/noticias" element={<News />} />
         <Route path="/noticias/:slug" element={<News />} />
