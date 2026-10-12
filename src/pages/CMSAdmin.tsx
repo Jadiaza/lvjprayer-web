@@ -163,11 +163,11 @@ const modules: Module[] = [
     ],
   },
   {
-    key: "settings", title: "Ajustes del sitio", table: "site_settings", description: "Identidad, enlaces y opciones públicas del sitio.",
+    key: "settings", title: "Ajustes del sitio", table: "site_settings", description: "Claves públicas: brand_name, brand_tagline, logo_url, footer_description, navigation y social_links.",
     icon: Settings2, sortBy: "key",
     fields: [
-      { key: "key", label: "Clave del ajuste", required: true },
-      { key: "value", label: "Valor (JSON)", kind: "json", required: true, hint: 'Ej.: "La Voz de Jesús" o {"facebook":"https://..."}' },
+      { key: "key", label: "Clave del ajuste", required: true, hint: "Usa una de las claves descritas arriba o una clave de contenido público." },
+      { key: "value", label: "Valor (JSON)", kind: "json", required: true, hint: 'Texto entre comillas, enlace o arreglo JSON. Ej.: "La Voz de Jesús".' },
       { key: "is_public", label: "Visible en sitio (true/false)" },
     ],
   },
