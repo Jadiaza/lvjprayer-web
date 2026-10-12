@@ -6,8 +6,10 @@ const navItems = [
   { label: "Inicio", href: "/" },
   { label: "Noticias", href: "/noticias" },
   { label: "Programación", href: "/shows-schedule" },
+  { label: "Audios", href: "/audios" },
   { label: "Videos", href: "/videos-elementor" },
   { label: "Alabanzas", href: "/charts-elementor" },
+  { label: "Artistas", href: "/artistas" },
   { label: "Contacto", href: "/contacts" },
 ];
 
