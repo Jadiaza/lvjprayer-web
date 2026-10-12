@@ -20,7 +20,7 @@ $routes = [
   'videos' => ['table' => 'videos', 'query' => 'select=id,title,slug,description,category,video_url,thumbnail_url,published_at&status=eq.published&order=published_at.desc&limit=100'],
   'playlists' => ['table' => 'playlists', 'query' => 'select=id,title,slug,description,cover_url,tracks,published_at&status=eq.published&order=published_at.desc&limit=100'],
   'pages' => ['table' => 'content_pages', 'query' => 'select=id,title,slug,summary,body,published_at&status=eq.published&order=slug.asc&limit=100'],
-  'media' => ['table' => 'media_assets', 'query' => 'select=id,title,asset_type,url,alt_text&status=eq.published&order=asset_type.asc&limit=200'],
+  'media' => ['table' => 'lvj_cms_media', 'query' => 'select=id,title,asset_type,url,alt_text&status=eq.published&order=asset_type.asc&limit=200'],
   'settings' => ['table' => 'site_settings', 'query' => 'select=key,value&is_public=eq.true&order=key.asc&limit=100'],
   'theme' => ['table' => 'liturgical_themes', 'query' => 'select=id,title,slug,season,primary_color,accent_color,background_color,image_url,start_date,end_date&status=in.(scheduled,active)&order=start_date.desc&limit=20'],
 ];
