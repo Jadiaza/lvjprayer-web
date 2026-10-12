@@ -15,6 +15,7 @@ import Videos from "@/pages/Videos";
 import Charts from "@/pages/Charts";
 import Contacts from "@/pages/Contacts";
 import NotFound from "@/pages/NotFound";
+import SeasonalTheme from "@/components/SeasonalTheme";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const SiteLayout = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SeasonalTheme />
       {!isAdmin && <Header />}
       {!isAdmin && <LunaPlayer />}
       <Routes>
