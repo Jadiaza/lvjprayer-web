@@ -1,39 +1,56 @@
-# Administrador completo de La Voz de Jesús
+# Administración completa de La Voz de Jesús
 
-## Componentes
+## Arquitectura
 
-- **Panel en Vercel:** /admin en el proyecto administrativo. Autenticación y permisos editor/admin usan Supabase Auth y RLS.
-- **Noticias:** /admin/noticias; mantiene la bandeja de fuentes revisada por un editor.
-- **Contenido general:** programas, audios, artistas, videos, playlists, páginas, catálogo de medios, ajustes y temas litúrgicos.
-- **Web pública en el hosting:** las páginas consultan únicamente contenido publicado a través de /api/contenido.php.
-- **Fuentes RSS:** se pueden administrar desde el módulo Fuentes RSS. El cron de Vercel importa metadatos al buzón; nunca publica automáticamente las noticias.
+- **Vercel:** sirve el panel editorial y sus rutas administrativas. Al abrir la raíz del proyecto Vercel, redirige a `/admin`.
+- **Supabase:** Auth, roles `admin/editor`, políticas RLS y base de datos para publicaciones del CMS.
+- **Hosting compartido:** conserva el sitio estático y el reproductor Luna. Las páginas leen contenido publicado desde el endpoint PHP.
+- **Fuentes editoriales:** RSS/Atom aporta titulares, extractos y enlaces al buzón para revisión. Nunca se publica contenido externo automáticamente.
 
-## Aplicación de la estructura
+## Módulos del panel
 
-1. En Supabase, ejecutar supabase/cms-schema.sql una sola vez en el SQL Editor. El script crea tablas nuevas y políticas RLS; no reemplaza las tablas de LVJ Prayer ni las tablas de noticias.
-2. Desplegar la rama cms-full-admin en Vercel como Preview y comprobar el panel antes de fusionar a main.
-3. Copiar hosting-api/contenido.php a /public_html/api/contenido.php. Debe quedar junto al news-bootstrap.php ya usado por noticias y al config.local.php privado existente.
-4. No reemplazar /public_html/api/bootstrap.php de LVJ Prayer. No subir secretos a GitHub ni a la carpeta pública.
-5. Reconstruir el sitio público con npm run build:hosting y publicar el contenido de dist-hosting en /public_html/lvjplayer/.
+- **Noticias y fuentes RSS:** revisión de titulares, conversión a borrador propio, edición, imagen, publicación, archivo y gestión de fuentes autorizadas.
+- **Carrusel de portada:** titular, etiqueta, descripción, imagen, botón, orden y estado.
+- **Programación:** título, resumen, categoría, presentador, día, horario, audio, portada y publicación.
+- **Audios y episodios:** podcast, oración y reflexión con URL de audio y arte.
+- **Artistas:** perfil, biografía, imagen, redes y sitio web.
+- **Videos:** enlace y miniatura para predicaciones y catequesis.
+- **Playlists:** colecciones con pistas descritas mediante JSON.
+- **Páginas:** texto y resumen para rutas públicas `/pagina/:slug`.
+- **Biblioteca de medios:** catálogo de recursos por URL. No almacena binarios.
+- **Tiempos litúrgicos:** programa colores e imagen por fecha; se usa la zona horaria de Bogotá.
+- **Ajustes del sitio:** marca, menú, pie de página y enlaces sociales.
+
+### Claves de ajustes del sitio
+
+Usa una fila por clave en `site_settings`; el campo `value` contiene JSON válido y `is_public` debe estar activo para que el hosting lo reciba:
+
+| Clave | Ejemplo de valor JSON |
+|---|---|
+| `brand_name` | `"LA VOZ DE JESÚS"` |
+| `brand_tagline` | `"RADIO CATÓLICA · COLOMBIA"` |
+| `logo_url` | `"https://lavozdejesus.co/lvjplayer/images/lvj-emblema.png"` |
+| `footer_description` | `"Música, oración, formación y esperanza."` |
+| `navigation` | `[{"label":"Inicio","href":"/"},{"label":"Noticias","href":"/noticias"},{"label":"Programación","href":"/shows-schedule"},{"label":"Audios","href":"/audios"},{"label":"Videos","href":"/videos-elementor"},{"label":"Alabanzas","href":"/charts-elementor"},{"label":"Artistas","href":"/artistas"},{"label":"Contacto","href":"/contacts"}]` |
+| `social_links` | `{"facebook":"https://facebook.com/...","instagram":"https://instagram.com/...","whatsapp":"https://wa.me/..."}` |
+
+Los valores de texto también son JSON: incluye comillas. Para navegación solo se aceptan rutas internas que empiezan con `/`; los enlaces externos del pie deben usar HTTPS.
+
+## Despliegue
+
+1. El esquema `supabase/cms-schema.sql` ya fue aplicado al proyecto Supabase `zcfnquusvkrkqjeusmly`. No lo vuelvas a ejecutar salvo que haya una migración nueva.
+2. Desplegar esta rama en Vercel como Preview. Revisar allí inicio de sesión, permisos y publicación antes de llevarla a producción.
+3. Copiar `hosting-api/contenido.php` a `/public_html/api/contenido.php`. Debe convivir con `news-bootstrap.php` y leer la configuración privada existente.
+4. **No reemplazar** `/public_html/api/bootstrap.php` de LVJ Prayer ni subir `config.local.php), claves o secretos a GitHub.
+5. Reconstruir el sitio con `npm run build:hosting` y subir el contenido de `dist-hosting` a `/public_html/lvjplayer/`. Esto conserva la portada Luna fuera de la aplicación editorial.
+6. Para poner el CMS en el dominio público de Vercel, revisar y fusionar el PR a `main`; el hosting público requiere su propio build actualizado.
 
 ## Variables
 
-El endpoint del hosting usa los valores privados que ya existen en /public_html/api/config.local.php:
+En Vercel, para el panel: `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY`. Para la ingesta programada: `SUPABASE_URL`, `SUPABASE_SECRET_KEY` y `CRON_SECRET`, solo del lado servidor.
 
-- supabase_url
-- supabase_anon_key
+En el hosting, el endpoint usa `SUPABASE_URL` y `SUPABASE_ANON_KEY` de `/public_html/api/config.local.php`; la clave publicable puede usarse desde PHP, nunca la service role.
 
-El panel requiere en Vercel VITE_SUPABASE_URL y VITE_SUPABASE_PUBLISHABLE_KEY. El cron requiere SUPABASE_URL, SUPABASE_SECRET_KEY y CRON_SECRET; la clave secreta vive solo en Vercel.
+## Alcance actual
 
-## Publicación y calendario
-
-- Los elementos públicos se muestran al estar en estado publicado.
-- Los temas litúrgicos se activan por fecha (Desde y Hasta) con sus colores principales, acento y fondo. Se recomienda programar las temporadas con anticipación y verificar fechas del calendario litúrgico colombiano.
-- Audios, videos, imágenes y medios se administran por enlaces HTTPS para evitar que archivos pesados ralenticen el panel o el hosting. La playlist guarda una lista JSON de pistas.
-- RSS/Atom aporta titulares, extractos y enlaces para revisión editorial. Redacta una nota propia y conserva atribución/enlace; no se copian cuerpos automáticamente.
-
-## Límites actuales
-
-- La estructura incluye un CMS operativo de registros y vistas públicas enlazadas para programación, audio, artistas, videos, playlists, páginas y temas.
-- La portada principal conserva su composición del diseño existente; el CMS actualiza su parrilla destacada y la paleta litúrgica. El carrusel, pie, menú, canal en vivo y textos de contacto aún son componentes fijos, no bloques reordenables tipo constructor visual.
-- Los medios se gestionan por URL; aún no hay carga directa de archivos para toda la biblioteca ni editor visual de bloques.
+El panel gestiona contenido y ajustes comunes sin exponer privilegios de Supabase. Los reproductores y el contenido audiovisual se integran por URL; no se cargan archivos pesados en el panel. La composición de secciones de la portada, el reproductor, formularios de contacto y constructor de bloques no son todavía editables/reordenables como WordPress.
