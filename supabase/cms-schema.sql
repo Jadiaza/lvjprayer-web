@@ -159,7 +159,7 @@ begin
     execute format('grant insert, update, delete on public.%I to authenticated', table_name);
     execute format('drop policy if exists "Public published read" on public.%I', table_name);
     if table_name = 'liturgical_themes' then
-      execute format('create policy "Public published read" on public.%I for select to anon, authenticated using ((status in (''scheduled'',''active'') and current_date between start_date and end_date) or public.has_role((select auth.uid()), ''admin''::public.app_role) or public.has_role((select auth.uid()), ''editor''::public.app_role))', table_name);
+      execute format('create policy "Public published read" on public.%I for select to anon, authenticated using ((status in (''scheduled'',''active'') and (now() at time zone ''America/Bogota'')::date between start_date and end_date) or public.has_role((select auth.uid()), ''admin''::public.app_role) or public.has_role((select auth.uid()), ''editor''::public.app_role))', table_name);
     else
       execute format('create policy "Public published read" on public.%I for select to anon, authenticated using (status = ''published'' or public.has_role((select auth.uid()), ''admin''::public.app_role) or public.has_role((select auth.uid()), ''editor''::public.app_role))', table_name);
     end if;
