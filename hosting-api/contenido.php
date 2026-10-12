@@ -38,7 +38,7 @@ if (!function_exists('curl_init')) {
 
 $endpoint = $configUrl . '/rest/v1/' . $routes[$type]['table'] . '?' . $routes[$type]['query'];
 if ($type === 'theme') {
-  $today = gmdate('Y-m-d');
+  $today = (new DateTimeImmutable('now', new DateTimeZone('America/Bogota')))->format('Y-m-d');
   $endpoint .= '&start_date=lte.' . rawurlencode($today) . '&end_date=gte.' . rawurlencode($today);
 }
 
