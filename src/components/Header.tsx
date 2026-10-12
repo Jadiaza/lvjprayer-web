@@ -1,33 +1,43 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu, X, Radio, ChevronRight } from "lucide-react";
+import { usePublicSettings } from "@/lib/publicContent";
 
 const navItems = [
   { label: "Inicio", href: "/" },
   { label: "Noticias", href: "/noticias" },
   { label: "Programación", href: "/shows-schedule" },
+  { label: "Audios", href: "/audios" },
   { label: "Videos", href: "/videos-elementor" },
   { label: "Alabanzas", href: "/charts-elementor" },
+  { label: "Artistas", href: "/artistas" },
   { label: "Contacto", href: "/contacts" },
 ];
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const settings = usePublicSettings();
+  const brandName = typeof settings.brand_name === "string" ? settings.brand_name : "LA VOZ DE JESÚS";
+  const brandTagline = typeof settings.brand_tagline === "string" ? settings.brand_tagline : "RADIO CATÓLICA · COLOMBIA";
+  const logoUrl = typeof settings.logo_url === "string" && /^https:\/\//i.test(settings.logo_url) ? settings.logo_url : "/images/lvj-emblema.png";
+  const navigation = Array.isArray(settings.navigation)
+    ? settings.navigation.filter((item): item is { label: string; href: string } => !!item && typeof item === "object" && "label" in item && "href" in item && typeof item.label === "string" && typeof item.href === "string" && (item.href.startsWith("/") && !item.href.startsWith("//")))
+    : navItems;
   const closeMenu = () => setMobileOpen(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between px-4 sm:px-7 lg:px-10">
         <Link to="/" onClick={closeMenu} className="flex shrink-0 items-center gap-3" aria-label="La Voz de Jesús, inicio">
-          <img src="/images/lvj-emblema.png" alt="" className="h-12 w-12 object-contain" />
+          <img src={logoUrl} alt="" className="h-12 w-12 object-contain" />
           <span className="grid leading-none">
-            <strong className="font-display text-[15px] font-bold tracking-[.16em] text-foreground">LA VOZ <span className="text-primary">DE JESÚS</span></strong>
-            <small className="mt-1.5 text-[9px] tracking-[.2em] text-muted-foreground">RADIO CATÓLICA · COLOMBIA</small>
+            <strong className="font-display text-[15px] font-bold tracking-[.16em] text-foreground">{brandName}</strong>
+            <small className="mt-1.5 text-[9px] tracking-[.2em] text-muted-foreground">{brandTagline}</small>
           </span>
         </Link>
 
         <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Navegación principal">
-          {navItems.map((item) => (
+          {navigation.map((item) => (
             <NavLink key={item.href} to={item.href} end={item.href === "/"} className={({ isActive }) => `px-3 py-2 text-[11px] font-semibold uppercase tracking-[.09em] transition-colors ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>
               {item.label}
             </NavLink>

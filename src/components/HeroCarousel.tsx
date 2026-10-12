@@ -4,36 +4,53 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import radioStudio from "@/assets/radio-banner.jpg";
 import worshipImage from "@/assets/hero-2.jpg";
+import { getPublicCollection } from "@/lib/publicContent";
 
-const slides = [
-  { image: radioStudio, category: "LA VOZ DE JESÚS · RADIO CATÓLICA", title: "Una voz de fe\nsiempre contigo.", description: "Música, oración y mensajes que acompañan tu camino. Sintoniza desde donde estés.", action: "Escuchar en vivo", href: "#luna-player" },
-  { image: worshipImage, category: "MÚSICA QUE ELEVA EL CORAZÓN", title: "Alabemos juntos\ncon esperanza.", description: "Un espacio para encontrarnos con Dios a través de la música y la comunidad.", action: "Descubrir alabanzas", href: "/charts-elementor" },
+type Slide = { id: string; image: string; category: string; title: string; description: string; action: string; href: string };
+type PublishedSlide = { id: string; image_url: string; eyebrow: string; title: string; description: string; button_label: string; button_url: string };
+
+const examples: Slide[] = [
+  { id: "radio", image: radioStudio, category: "LA VOZ DE JESÚS · RADIO CATÓLICA", title: "Una voz de fe\nsiempre contigo.", description: "Música, oración y mensajes que acompañan tu camino. Sintoniza desde donde estés.", action: "Escuchar en vivo", href: "#luna-player" },
+  { id: "music", image: worshipImage, category: "MÚSICA QUE ELEVA EL CORAZÓN", title: "Alabemos juntos\ncon esperanza.", description: "Un espacio para encontrarnos con Dios a través de la música y la comunidad.", action: "Descubrir alabanzas", href: "/charts-elementor" },
 ];
 
 const HeroCarousel = () => {
   const [current, setCurrent] = useState(0);
+  const [published, setPublished] = useState<PublishedSlide[]>([]);
   useEffect(() => {
-    const timer = window.setInterval(() => setCurrent((prev) => (prev + 1) % slides.length), 7000);
-    return () => window.clearInterval(timer);
+    getPublicCollection<PublishedSlide>("slides").then(setPublished).catch(() => setPublished([]));
   }, []);
+
+  const slides: Slide[] = published.length
+    ? published.map((slide) => ({ id: slide.id, image: slide.image_url, category: slide.eyebrow, title: slide.title, description: slide.description, action: slide.button_label, href: slide.button_url }))
+    : examples;
+  useEffect(() => {
+    setCurrent(0);
+    const timer = window.setInterval(() => setCurrent((previous) => (previous + 1) % slides.length), 7000);
+    return () => window.clearInterval(timer);
+  }, [slides.length]);
+
   const change = (step: number) => setCurrent((value) => (value + step + slides.length) % slides.length);
-  const slide = slides[current];
+  const slide = slides[current % slides.length];
+  const actionClass = "inline-flex items-center gap-2 rounded-sm bg-gradient-lvj px-5 py-3 text-xs font-bold uppercase tracking-[.1em] text-primary-foreground";
   const primaryAction = slide.href.startsWith("#")
-    ? <a href={slide.href} className="inline-flex items-center gap-2 rounded-sm bg-gradient-lvj px-5 py-3 text-xs font-bold uppercase tracking-[.1em] text-primary-foreground"><Headphones className="h-4 w-4" />{slide.action}</a>
-    : <Link to={slide.href} className="inline-flex items-center gap-2 rounded-sm bg-gradient-lvj px-5 py-3 text-xs font-bold uppercase tracking-[.1em] text-primary-foreground"><Headphones className="h-4 w-4" />{slide.action}</Link>;
+    ? <a href={slide.href} className={actionClass}><Headphones className="h-4 w-4" />{slide.action}</a>
+    : /^https:\/\//i.test(slide.href)
+      ? <a href={slide.href} target="_blank" rel="noreferrer" className={actionClass}><Headphones className="h-4 w-4" />{slide.action}</a>
+      : <Link to={slide.href} className={actionClass}><Headphones className="h-4 w-4" />{slide.action}</Link>;
 
   return (
     <section className="relative isolate flex min-h-[470px] items-center overflow-hidden border-b border-border md:min-h-[570px] lg:min-h-[620px]">
-      <AnimatePresence mode="wait"><motion.div key={slide.image} initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: .65 }} className="absolute inset-0 -z-20"><img src={slide.image} alt="" className="h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-r from-[#071020] via-[#071020]/80 to-[#071020]/15" /><div className="absolute inset-0 bg-gradient-to-t from-[#071020]/60 via-transparent to-[#071020]/15" /></motion.div></AnimatePresence>
+      <AnimatePresence mode="wait"><motion.div key={slide.id} initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: .65 }} className="absolute inset-0 -z-20"><img src={slide.image} alt="" className="h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-r from-[#071020] via-[#071020]/80 to-[#071020]/15" /><div className="absolute inset-0 bg-gradient-to-t from-[#071020]/60 via-transparent to-[#071020]/15" /></motion.div></AnimatePresence>
       <div className="mx-auto w-full max-w-[1440px] px-6 py-16 sm:px-10 lg:px-16">
         <div className="max-w-2xl">
           <motion.div key={`category-${current}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .12 }} className="mb-5 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.2em] text-primary"><span className="h-px w-9 bg-primary" />{slide.category}</motion.div>
-          <motion.h1 key={`title-${current}`} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .18 }} className="whitespace-pre-line font-display text-5xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl lg:text-7xl">{slide.title.split("\n").map((line, i) => <span key={line} className={i === 1 ? "text-primary" : ""}>{line}{i === 0 ? <br /> : null}</span>)}</motion.h1>
+          <motion.h1 key={`title-${current}`} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .18 }} className="whitespace-pre-line font-display text-5xl font-bold leading-[1.04] tracking-tight text-white sm:text-6xl lg:text-7xl">{slide.title.split("\n").map((line, index) => <span key={`${slide.id}-${index}`} className={index === 1 ? "text-primary" : ""}>{line}{index === 0 ? <br /> : null}</span>)}</motion.h1>
           <motion.p key={`description-${current}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .24 }} className="mt-5 max-w-lg text-sm leading-7 text-white/75 sm:text-base">{slide.description}</motion.p>
           <div className="mt-8 flex flex-wrap items-center gap-3">{primaryAction}<Link to="/shows-schedule" className="inline-flex items-center gap-2 rounded-sm border border-white/25 bg-black/10 px-5 py-3 text-xs font-semibold uppercase tracking-[.1em] text-white transition-colors hover:border-primary hover:text-primary"><Radio className="h-4 w-4" /> Ver programación</Link></div>
         </div>
       </div>
-      <div className="absolute bottom-5 right-5 flex items-center gap-2 sm:bottom-8 sm:right-8"><span className="mr-2 text-[9px] font-semibold tracking-[.14em] text-white/60">0{current + 1} / 0{slides.length}</span><button type="button" aria-label="Diapositiva anterior" onClick={() => change(-1)} className="grid h-9 w-9 place-items-center border border-white/25 bg-black/20 text-white hover:border-primary hover:text-primary"><ChevronLeft className="h-4 w-4" /></button><button type="button" aria-label="Siguiente diapositiva" onClick={() => change(1)} className="grid h-9 w-9 place-items-center border border-white/25 bg-black/20 text-white hover:border-primary hover:text-primary"><ChevronRight className="h-4 w-4" /></button></div>
+      {slides.length > 1 && <div className="absolute bottom-5 right-5 flex items-center gap-2 sm:bottom-8 sm:right-8"><span className="mr-2 text-[9px] font-semibold tracking-[.14em] text-white/60">0{current + 1} / 0{slides.length}</span><button type="button" aria-label="Diapositiva anterior" onClick={() => change(-1)} className="grid h-9 w-9 place-items-center border border-white/25 bg-black/20 text-white hover:border-primary hover:text-primary"><ChevronLeft className="h-4 w-4" /></button><button type="button" aria-label="Siguiente diapositiva" onClick={() => change(1)} className="grid h-9 w-9 place-items-center border border-white/25 bg-black/20 text-white hover:border-primary hover:text-primary"><ChevronRight className="h-4 w-4" /></button></div>}
     </section>
   );
 };
