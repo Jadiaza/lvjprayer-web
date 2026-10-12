@@ -14,6 +14,7 @@ if ($configUrl === '' || $publishableKey === '') {
 }
 
 $routes = [
+  'slides' => ['table' => 'home_slides', 'query' => 'select=id,title,eyebrow,description,image_url,button_label,button_url,sort_order&status=eq.published&order=sort_order.asc&limit=12'],
   'programs' => ['table' => 'programs', 'query' => 'select=id,title,slug,summary,category,host_name,weekday,start_time,end_time,schedule_text,stream_url,cover_url,sort_order&status=eq.published&order=sort_order.asc&limit=100'],
   'audio' => ['table' => 'audio_items', 'query' => 'select=id,title,slug,description,artist_name,category,audio_url,cover_url,duration_seconds,published_at&status=eq.published&order=published_at.desc&limit=100'],
   'artists' => ['table' => 'artists', 'query' => 'select=id,name,slug,bio,image_url,website_url,social_links&status=eq.published&order=name.asc&limit=100'],
