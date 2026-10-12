@@ -89,6 +89,20 @@ create table if not exists public.content_pages (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.home_slides (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  eyebrow text not null default 'LA VOZ DE JESÚS',
+  description text not null default '',
+  image_url text not null check (image_url ~ '^https://'),
+  button_label text not null default 'Escuchar en vivo',
+  button_url text not null default '#luna-player',
+  sort_order integer not null default 0,
+  status text not null default 'draft' check (status in ('draft','published','archived')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.lvj_cms_media (
   id uuid primary key default gen_random_uuid(),
   title text not null,
@@ -116,6 +130,7 @@ create table if not exists public.liturgical_themes (
   updated_at timestamptz not null default now(),
   constraint liturgical_theme_dates_check check (end_date >= start_date)
 );
+create index if not exists home_slides_public_order on public.home_slides(sort_order, title) where status = 'published';
 create index if not exists liturgical_themes_date_range on public.liturgical_themes(start_date, end_date) where status <> 'inactive';
 
 create table if not exists public.site_settings (
@@ -137,7 +152,7 @@ create index if not exists lvj_cms_media_public_type on public.lvj_cms_media(ass
 do $$
 declare table_name text;
 begin
-  foreach table_name in array array['programs','audio_items','artists','videos','playlists','content_pages','lvj_cms_media','liturgical_themes'] loop
+  foreach table_name in array array['programs','audio_items','artists','videos','playlists','content_pages','home_slides','lvj_cms_media','liturgical_themes'] loop
     execute format('alter table public.%I enable row level security', table_name);
     execute format('revoke all on public.%I from anon, authenticated', table_name);
     execute format('grant select on public.%I to anon, authenticated', table_name);
