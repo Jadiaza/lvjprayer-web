@@ -29,6 +29,20 @@ type Module = {
 
 const modules: Module[] = [
   {
+    key: "home", title: "Carrusel de portada", table: "home_slides", description: "Edita los banners, textos, imágenes y botones de la página principal.",
+    icon: LayoutDashboard, sortBy: "sort_order",
+    fields: [
+      { key: "title", label: "Titular", kind: "textarea", required: true },
+      { key: "eyebrow", label: "Etiqueta superior" },
+      { key: "description", label: "Descripción", kind: "textarea" },
+      { key: "image_url", label: "Imagen HTTPS", kind: "url", required: true },
+      { key: "button_label", label: "Texto del botón" },
+      { key: "button_url", label: "Enlace del botón", required: true, hint: "Ruta interna como /audios o #luna-player." },
+      { key: "sort_order", label: "Orden", kind: "number" },
+      { key: "status", label: "Estado", kind: "select", options: ["draft", "published", "archived"] },
+    ],
+  },
+  {
     key: "sources", title: "Fuentes RSS", table: "news_sources", description: "Administra feeds aprobados para la bandeja editorial de noticias.",
     icon: Newspaper, sortBy: "name",
     fields: [
@@ -297,9 +311,9 @@ export default function CMSAdmin() {
         <NavItem keyName="dashboard" label="Resumen" icon={LayoutDashboard} />
         <div className="px-3 pb-1 pt-5 text-[9px] font-bold uppercase tracking-[.16em] text-muted-foreground">Publicaciones</div>
         <a href="/admin/noticias" className="flex items-center gap-3 px-3 py-2.5 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground"><Newspaper className="h-4 w-4" />Noticias y fuentes</a>
-        {countModules.slice(0, 8).map((module) => <NavItem key={module.key} keyName={module.key} label={module.title} icon={module.icon} />)}
+        {countModules.slice(0, 9).map((module) => <NavItem key={module.key} keyName={module.key} label={module.title} icon={module.icon} />)}
         <div className="px-3 pb-1 pt-5 text-[9px] font-bold uppercase tracking-[.16em] text-muted-foreground">Sitio</div>
-        {countModules.slice(8).map((module) => <NavItem key={module.key} keyName={module.key} label={module.title} icon={module.icon} />)}
+        {countModules.slice(9).map((module) => <NavItem key={module.key} keyName={module.key} label={module.title} icon={module.icon} />)}
       </nav>
       <div className="border-t border-border p-3"><a href="/" className="block px-3 py-2 text-xs text-muted-foreground hover:text-primary">Ver sitio público ↗</a><button onClick={() => void supabase?.auth.signOut()} className="flex w-full items-center gap-3 px-3 py-2 text-xs text-muted-foreground hover:text-primary"><LogOut className="h-4 w-4" />Cerrar sesión</button></div>
     </aside>
