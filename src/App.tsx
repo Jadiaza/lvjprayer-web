@@ -13,6 +13,7 @@ import CMSAdmin from "@/pages/CMSAdmin";
 import Schedule from "@/pages/Schedule";
 import Artists from "@/pages/Artists";
 import AudioLibrary from "@/pages/AudioLibrary";
+import CMSContentPage from "@/pages/CMSContentPage";
 import Videos from "@/pages/Videos";
 import Charts from "@/pages/Charts";
 import Contacts from "@/pages/Contacts";
@@ -41,6 +42,7 @@ const SiteLayout = () => {
         <Route path="/shows-schedule" element={<Schedule />} />
         <Route path="/artistas" element={<Artists />} />
         <Route path="/audios" element={<AudioLibrary />} />
+        <Route path="/pagina/:slug" element={<CMSContentPage />} />
         <Route path="/videos-elementor" element={<Videos />} />
         <Route path="/charts-elementor" element={<Charts />} />
         <Route path="/contacts" element={<Contacts />} />
